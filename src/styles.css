@@ -74,6 +74,14 @@ input:focus, select:focus, textarea:focus, button:focus-visible { outline: 2px s
 .topnav a.active, .topnav .active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 700; }
 .user-menu { display: flex; align-items: center; gap: 12px; justify-content: flex-end; }
 .menu-btn { display: none; width: 44px; height: 44px; border: 1.5px solid var(--primary); border-radius: 10px; background: #fff; color: var(--primary); font-size: 22px; line-height: 1; cursor: pointer; }
+.profile { position: relative; }
+.avatar-btn { border: 0; padding: 0; background: none; border-radius: 50%; cursor: pointer; display: block; }
+.avatar-btn:hover .avatar, .avatar-btn[aria-expanded='true'] .avatar { box-shadow: 0 0 0 3px var(--tint), 0 0 0 5px var(--secondary); }
+.dropdown { position: absolute; right: 0; top: calc(100% + 10px); z-index: 10; width: 250px; max-width: calc(100vw - 24px); background: #fff; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 30px rgba(42, 23, 32, .18); padding: 8px; display: flex; flex-direction: column; }
+.dropdown-head { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px 12px; border-bottom: 1px solid var(--border); margin-bottom: 6px; overflow-wrap: anywhere; }
+.dropdown-item { display: flex; align-items: center; min-height: 44px; padding: 10px 12px; border: 0; border-radius: 8px; background: none; color: var(--text); font-weight: 500; text-decoration: none; text-align: left; cursor: pointer; width: 100%; }
+.dropdown-item:hover { background: var(--tint); }
+.dropdown-logout { color: var(--red); font-weight: 700; }
 .avatar { width: 42px; height: 42px; font-size: 17px; border-radius: 50%; background: var(--secondary); color: var(--primary); display: inline-grid; place-items: center; font-weight: 700; flex: none; }
 .container { width: 100%; max-width: 1280px; margin: 0 auto; padding: 32px; display: flex; flex-direction: column; gap: 24px; }
 

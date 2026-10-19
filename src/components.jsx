@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useApp, isSlotBooked } from './store';
 import {
@@ -60,14 +60,44 @@ export function RequireRole({ role }) {
 }
 export const homeFor = (role) => ({ patient: '/doctors', doctor: '/doctor', admin: '/admin' }[role] || '/login');
 
-function UserMenu() {
+// Profile icon with a dropdown (name, role, profile link, Log out). Used on every role's top bar.
+function ProfileMenu() {
   const { user, logout } = useApp();
   const nav = useNavigate();
+  const { pathname } = useLocation();
+  const [open, setOpen] = useState(false);
+  const box = useRef(null);
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    if (!open) return undefined;
+    const away = (e) => { if (box.current && !box.current.contains(e.target)) setOpen(false); };
+    const esc = (e) => { if (e.key === 'Escape') setOpen(false); };
+    document.addEventListener('mousedown', away);
+    document.addEventListener('touchstart', away);
+    document.addEventListener('keydown', esc);
+    return () => {
+      document.removeEventListener('mousedown', away);
+      document.removeEventListener('touchstart', away);
+      document.removeEventListener('keydown', esc);
+    };
+  }, [open]);
+  const profilePath = { patient: '/profile', doctor: '/doctor/profile' }[user.role];
   return (
-    <div className="user-menu">
-      <span className="user-name">{user.name}</span>
-      <Avatar name={user.name} />
-      <button className="btn btn-outline btn-sm" onClick={() => { logout(); nav('/login'); }}>Log out</button>
+    <div className="profile" ref={box}>
+      <button type="button" className="avatar-btn" aria-label="Account menu" aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen(!open)}>
+        <Avatar name={user.name} />
+      </button>
+      {open && (
+        <div className="dropdown" role="menu">
+          <div className="dropdown-head">
+            <strong>{user.name}</strong>
+            <span className="muted small">{user.role === 'admin' ? 'Administrator' : user.role[0].toUpperCase() + user.role.slice(1)}</span>
+            <span className="muted small">{user.email}</span>
+          </div>
+          {profilePath && <Link role="menuitem" className="dropdown-item" to={profilePath}>My profile</Link>}
+          <button type="button" role="menuitem" className="dropdown-item dropdown-logout" onClick={() => { logout(); nav('/login'); }}>Log out</button>
+        </div>
+      )}
     </div>
   );
 }
@@ -87,7 +117,7 @@ export function PatientLayout() {
             <NavLink to="/profile">Profile</NavLink>
           </nav>
         ) : <span />}
-        {user ? <UserMenu /> : (
+        {user ? <div className="user-menu"><span className="user-name">{user.name}</span><ProfileMenu /></div> : (
           <div className="user-menu">
             <Link className="btn btn-outline btn-sm" to="/login">Log in</Link>
             <Link className="btn btn-primary btn-sm" to="/register">Register</Link>
@@ -113,7 +143,7 @@ export function SidebarLayout({ section, links }) {
         <nav className="topnav"><span className="active">Dashboard</span></nav>
         <div className="user-menu">
           <span className="user-name">{user.name}</span>
-          <Avatar name={user.name} />
+          <ProfileMenu />
           <button type="button" className="menu-btn" aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open} aria-controls="side-menu" onClick={() => setOpen(!open)}>
             {open ? '✕' : '☰'}
