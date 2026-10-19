@@ -7,7 +7,7 @@ Stack: React 18 · Vite · React Router (HashRouter) · plain CSS · mock data p
 🔗 Project Links
 
 - 🌐 Live Demo: "View Live Application" (https://hospital-appointment-system-app.vercel.app/)
-- 💻 GitHub Repository: "View Source Code" (https://github.com/Dhakshan-S/hospital-appointment-booking)
+- 💻 GitHub Repository: "View Source Code & Documentation" (https://github.com/Dhakshan-S/hospital-appointment-booking)
 
 Setup
 
