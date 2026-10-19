@@ -1,4 +1,5 @@
-import { Link, NavLink, Navigate, Outlet, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useApp, isSlotBooked } from './store';
 import {
   WINDOW_DAYS, addDays, apptDate, dayName, dayNum, fmtTime, initials, slotsFor, todayStr,
@@ -11,8 +12,9 @@ export const Logo = ({ light }) => (
   </Link>
 );
 
-export const Avatar = ({ name, size = 40 }) => (
-  <span className="avatar" style={{ width: size, height: size, fontSize: size * 0.4 }}>{initials(name)}</span>
+// With no size the avatar is sized by CSS (so it can shrink on small screens).
+export const Avatar = ({ name, size }) => (
+  <span className="avatar" style={size ? { width: size, height: size, fontSize: size * 0.4 } : undefined}>{initials(name)}</span>
 );
 
 export const Badge = ({ status }) => (
@@ -64,7 +66,7 @@ function UserMenu() {
   return (
     <div className="user-menu">
       <span className="user-name">{user.name}</span>
-      <Avatar name={user.name} size={42} />
+      <Avatar name={user.name} />
       <button className="btn btn-outline btn-sm" onClick={() => { logout(); nav('/login'); }}>Log out</button>
     </div>
   );
@@ -99,18 +101,27 @@ export function PatientLayout() {
 
 // Sidebar layout for doctor and admin dashboards.
 export function SidebarLayout({ section, links }) {
-  const { user } = useApp();
+  const { user, logout } = useApp();
   const nav = useNavigate();
-  const { logout } = useApp();
+  const { pathname } = useLocation();
+  const [open, setOpen] = useState(false);
+  useEffect(() => setOpen(false), [pathname]); // close the mobile menu after navigating
   return (
     <div className="page">
       <header className="topbar">
         <Logo />
         <nav className="topnav"><span className="active">Dashboard</span></nav>
-        <div className="user-menu"><span className="user-name">{user.name}</span><Avatar name={user.name} size={42} /></div>
+        <div className="user-menu">
+          <span className="user-name">{user.name}</span>
+          <Avatar name={user.name} />
+          <button type="button" className="menu-btn" aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open} aria-controls="side-menu" onClick={() => setOpen(!open)}>
+            {open ? '✕' : '☰'}
+          </button>
+        </div>
       </header>
       <div className="shell">
-        <aside className="sidebar">
+        <aside id="side-menu" className={`sidebar${open ? ' open' : ''}`}>
           <div className="sidebar-section">{section}</div>
           {links.map((l) => (
             <NavLink key={l.to} to={l.to} end={l.end} className="side-link">{l.label}</NavLink>

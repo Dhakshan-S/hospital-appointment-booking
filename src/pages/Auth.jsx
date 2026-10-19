@@ -35,7 +35,7 @@ export function Login() {
   return (
     <AuthShell title="Book your doctor in minutes"
       points={['Find doctors by specialization', 'See real-time available slots', 'Cancel or reschedule online']}>
-      <h2 style={{ fontSize: 36 }}>Welcome back</h2>
+      <h2>Welcome back</h2>
       <p className="sub">Log in to manage your appointments</p>
       <form className="stack" onSubmit={submit} noValidate>
         {err && <div className="alert" role="alert">{err}</div>}
@@ -96,7 +96,7 @@ export function Register() {
   return (
     <AuthShell title="Create your patient account"
       points={['One account for all your appointments', 'Email or OTP verification keeps it secure']}>
-      <h2 style={{ fontSize: 36 }}>Register</h2>
+      <h2>Register</h2>
       <p className="sub">Fill in your details to get started</p>
       <form className="stack" onSubmit={submit} noValidate>
         <div className="form-grid">
@@ -135,7 +135,7 @@ export function Forgot() {
   };
   return (
     <AuthShell title="Reset your password" points={['We will email you a secure reset link']}>
-      <h2 style={{ fontSize: 36 }}>Forgot password?</h2>
+      <h2>Forgot password?</h2>
       <p className="sub">Enter the email linked to your account</p>
       <form className="stack" onSubmit={submit} noValidate>
         {msg && <div className={`alert${msg.startsWith('ok') ? ' alert-ok' : ''}`} role="status">{msg.slice(4)}</div>}
